@@ -3,7 +3,7 @@
 ## Project Goal
 
 Originally, the goal was to provide a tool that can be used to inform actions for the reduction of groundwater nitrate in central Wisconsin. However, we moved away from trying to predict/quantify nitrate. Instead, we focused primarily on showing contributing zones, flow paths, and transit times.
-
+Testing GitHub connection.
 ---
 
 ## How to Run the Code
