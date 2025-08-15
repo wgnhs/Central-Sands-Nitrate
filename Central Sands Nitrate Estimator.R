@@ -110,7 +110,7 @@ getLandCoverCode <- function() {
 #' Get Value and Class_Name data from the Cropscape Raster tif
 #' @returns a data frame with the Value and Class-Name Pair for the Cropscape Data set
 getCropScapeClassNames <- function() {
-  cropScapeRaster <- raster("Data Sets/CropScape/CDL_2022_20231127143930_554525100.tif")
+  cropScapeRaster <- raster("Data_Sets/CropScape/CDL_2022_20231127143930_554525100.tif")
   cropScapeLayers <- levels(cropScapeRaster)
   cropScapeClassNames <- cropScapeLayers[[1]] %>% #grab from the first layer
     dplyr::select(ID, CLASS_NAME)
@@ -173,11 +173,11 @@ getCoordBufferZone <- function(coordsOfInterest, buffer) {
 #' the specific numbers used (-2 and +79740) come from how the original ID generation code was written.
 #' @returns a data frame that has our MODPATH flow lines, including a new column indicating which file a given row came from
 getFloDataSet <- function() {
-  floDataSet0 <- st_read(dsn = "Data Sets/Particles_Pathlines_May2025/1particle_top_pathlines_0.shp")
+  floDataSet0 <- st_read(dsn = "Data_Sets/Particles_Pathlines_May2025/1particle_top_pathlines_0.shp")
   floDataSet0$source_file <- "pathlines0"
   floDataSet0$conversion_to_partidloc_ <- (floDataSet0$particleid - 2)
   
-  floDataSet1 <- st_read(dsn = "Data Sets/Particles_Pathlines_May2025/1particle_top_pathlines_1.shp")
+  floDataSet1 <- st_read(dsn = "Data_Sets/Particles_Pathlines_May2025/1particle_top_pathlines_1.shp")
   floDataSet1$source_file <- "pathlines1"
   floDataSet1$conversion_to_partidloc_  <- (floDataSet1$particleid + 79740)
   
@@ -193,7 +193,7 @@ getFloDataSet <- function() {
 #' Objects from this data set will be abbreviated as STP objects
 #' @returns a data frame with our MODPATH starting points
 getStpDataSet <- function() {
-  stpDataSet <- st_read(dsn = "Data Sets/Particles_Pathlines_May2025/startpoints_with_wiscland.shp")
+  stpDataSet <- st_read(dsn = "Data_Sets/Particles_Pathlines_May2025/startpoints_with_wiscland.shp")
   return(stpDataSet)
 }
 

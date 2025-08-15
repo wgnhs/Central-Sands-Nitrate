@@ -20,6 +20,9 @@ library(shinycssloaders)
 
 source("Central Sands Nitrate Estimator.R")
 
+# Unzip data files
+unzip(zipfile = "Data_Sets.zip", exdir = ".")
+
 # 1 Define Functions----
 #' Let us know if the point the user selected is within our boundary
 #' @param pathLineBoundary a polygon shape file of our region
