@@ -12,7 +12,7 @@ There are several ways to run the application:
 
 - **Connect URL:**  
   The simplest way is to click the URL on the connect server:  
-  [https://connect.doit.wisc.edu/CentralSandsGroundwater_ub2yZBKiptcPKk/](https://connect.doit.wisc.edu/CentralSandsGroundwater_ub2yZBKiptcPKk/)
+  [https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/](https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/)
 
 - **Use RStudio to run the Shiny App:**  
   Open either the UI, Server, or Global files in RStudio, and click the “Run App” button in the code editor’s toolbar (as with other Shiny Apps).
