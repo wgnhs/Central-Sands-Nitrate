@@ -218,8 +218,7 @@ function(input, output, session) {
     no3upr <- format(round(nO3Prediction()$upr, digits = 1), nsmall = 1)
     no3Units <- "mg/L"
     paste0(h2("Chart Explanation"),
-           "This bar chart shows the break down of land cover for the groundwater entry points", "<br>",
-           "Based on a correlation with land cover, the the nitrate level for the region you selected is likely between ", no3lwr, " ", no3Units, " and ", no3upr, " ", no3Units)
+           "This bar chart shows the break down of land cover for the groundwater entry points", "<br>")
   })
   
   output$transitTimeExplainer <- renderText({
@@ -276,3 +275,4 @@ function(input, output, session) {
     tags$iframe(src = "test3Dflowlines.html", width = "100%", height = "600px")
   })
 }
+
