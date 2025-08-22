@@ -422,7 +422,7 @@ createFlowTimeHistogram <- function(floTimes) {
     geom_histogram(fill = "blue", color = "black") +
     labs(title = "Transit Times from Contributing Zones",
          x = "Ground Water Transit Times (years)",
-         y = "Count of Pathlines") +
+         y = "NUmber of Flow Paths") +
     theme(title = element_text(size = 19),
           axis.title = element_text(size = 18),
           axis.text.x = element_text(size = 16),
@@ -496,7 +496,7 @@ createLandCoverPlotWiscLand <- function(landCover) {
   stackedBarPlot <- landCover %>%
     ggplot(aes(x = cls_desc_1, y = LAND_COVER_COUNT, fill = cls_desc_3)) + #the bars will be Level 1, the sub-bars will be level 3
     geom_bar(stat = "identity") +
-    labs(x = "Land Cover Category", y = "Count", title = stackedPlotTitle, fill = "Land Cover") +
+    labs(x = "Land Cover Category", y = "Number of Flow Paths", title = stackedPlotTitle, fill = "Land Cover") +
     theme(title = element_text(size = 19),
           axis.title = element_text(size = 18),
           axis.text.y = element_text(size = 16),

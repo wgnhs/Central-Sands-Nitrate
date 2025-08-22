@@ -30,20 +30,6 @@ dashboardPage(
         fluidRow(
           box(width = 6, htmlOutput("modelAssumptions"))
           )
-        ),
-      
-      #Third tab - Flowline Details----
-      tabPanel(
-        title = "Flowline Details (Prototype)",
-        fluidRow(
-          box(width = 6, imageOutput("groundWaterImage"))
-          ),
-        fluidRow(
-          box(width = 12, dataTableOutput("flowlineInfoTable"))
-          ),
-        fluidRow(
-          box(width = 12, htmlOutput("flowlines3D"))
-        )
         )
       )
     ),
