@@ -16,13 +16,13 @@ function(input, output, session) {
                   fillColor = "green",
                   fillOpacity = 0.7) %>% ##Add pumping wells
       addArrowhead(data = floDisplaySet,
-                  group = "Flow Lines",
+                  group = "Flow Paths",
                   color = "blue",
                   weight = 2,
-                  opacity = 0.5) %>% #Add all flow lines
-      hideGroup(c("Pumping Wells", "Flow Lines")) %>% #hide these groups by default
+                  opacity = 0.5) %>% #Add all flow paths
+      hideGroup(c("Pumping Wells", "Flow Paths")) %>% #hide these groups by default
       addLayersControl(baseGroups = c("Default", "Aerial", "Terrain"),
-                       overlayGroups = c("Pumping Wells", "Flow Lines"),
+                       overlayGroups = c("Pumping Wells", "Flow Paths"),
                        options = layersControlOptions(collapsed = TRUE)) %>% #Add toggle-able base layers
       addPolygons(data = pathLineBoundary,
                   group = "static",
@@ -208,7 +208,7 @@ function(input, output, session) {
     paste0(h2("Map Explanation"),
            "Click or drag the marker within the bounded region to get estimated land use from groundwater contributing zones.", "<br>",
            "The orange dots represent simulated groundwater entry points.", "<br>",
-           "The blue lines represent the modeled groundwater flow.", "<br>",
+           "The blue lines represent the modeled groundwater flow paths.", "<br>",
            "Current marker latitude: ", displayLat, "<br>",
            "Current marker longitude: ", displayLng, "<br>")
   })
@@ -275,5 +275,3 @@ function(input, output, session) {
     tags$iframe(src = "test3Dflowlines.html", width = "100%", height = "600px")
   })
 }
-
-
