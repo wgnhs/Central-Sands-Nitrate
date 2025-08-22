@@ -254,12 +254,13 @@ function(input, output, session) {
              )
            )
   })
-  output$takeAction <- renderText({
-    paste0(h2("App Purpose and Disclaimer"),
-           "This app was created to assist with decisions concerning groundwater source locations, travel paths, and transit times in the Central Sands of Wisconsin.","<br>",
-           "This representation of depth-to-bedrock over the Silurian dolomite in eastern Wisconsin is provided by the Wisconsin Geological and Natural History Survey (WGNHS) on an as is basis.","<br>",
-           "WGNHS will not be liable for any damages of any kind arising from the use of these data, including, but not limited to direct, indirect, punitive, and consequential.","<br>",
-           "WGNHS makes no warranties on these data, express, implied, statutory, or in any other provision of any agreement or communication, and specifically disclaims any implied warranties of merchantability or fitness for a particular purpose."
+  output$limitationsAndDataSources <- renderText({
+    paste0(h2("Limitations and Data Sources"),
+           "This app uses flow path data from Baker et al, 2025. Those flow paths were based on Fienen et al, 2022, Simulation of Regional Groundwater Flow and Groundwater/Lake Interactions in the Central Sands, Wisconsin.","<br>",
+           "The land use data is from Wiscland 2.0, Levels 1 and 3. See the additional information tab for these references and more background information.","<br>","<br>",
+           "In general the model is representative of groundwater movement but the flow paths are a model representation of the groundwater flows and as such cannot be expected to provide a perfect match actual groundwater movement.","<br>",
+           "As a result, these results should not be over interpreted represent estimates. There is significant error associated with the flow paths, including the timing, start and end points.","<br>",
+           "For example, there are a few known reaches of the stream network that are not properly represented in the model. In addition, variations in groundwater recharge and land use also introduce error."
            )
   })
   

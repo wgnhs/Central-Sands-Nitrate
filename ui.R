@@ -32,7 +32,7 @@ dashboardPage(
           box(width = 4, withSpinner(plotOutput(outputId = "flowTimeHistogram", height = "500px"), caption ="Processing Transit Times..."), htmlOutput("transitTimeExplainer"))
           ),
         fluidRow(
-          box(width = 12, htmlOutput("takeAction"))
+          box(width = 10, htmlOutput("limitationsAndDataSources"))
           )
         ),
       
