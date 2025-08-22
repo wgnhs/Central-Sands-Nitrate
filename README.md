@@ -1,26 +1,63 @@
 # Central Sands Groundwater – Decision Support Application
 
+Live app: [https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/](https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/)
+
 ## Project Goal
 
 Originally, the goal was to provide a tool that can be used to inform actions for the reduction of groundwater nitrate in central Wisconsin. However, we moved away from trying to predict/quantify nitrate. Instead, we focused primarily on showing contributing zones, flow paths, and transit times.
-Testing GitHub connection.
----
 
-## How to Run the Code
+## Developer setup 
 
-There are several ways to run the application:
+### Prerequisites
+- Install [RStudio Desktop](https://posit.co/download/rstudio-desktop/)
+- Install [Git](https://git-scm.com/downloads)
+- Create a [Github account](https://github.com/)
 
-- **Connect URL:**  
-  The simplest way is to click the URL on the connect server:  
-  [https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/](https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/)
+### Create new RStudio project from Github
+1. In RStudio, choose File > New project to open the New Project Wizard
+2. On the Create Project screen, choose Version Control
+3. On the Create Project from Version Control screen, choose Git
+4. On the Clone Git Repository screen, enter the URL of this repository (https://github.com/wgnhs/Central-Sands-Nitrate.git) into the Repository URL field. Leave other fields as they are.
+5. Click Create Project.
 
-- **Use RStudio to run the Shiny App:**  
-  Open either the UI, Server, or Global files in RStudio, and click the “Run App” button in the code editor’s toolbar (as with other Shiny Apps).
+### Run the app locally
+1. In RStudio, open one of the follow files: server.R, ui.R or global.R 
+2. Click Run App in the upper right corner of the file window.
+3. To run the logic without running the RShiny app, open CentralSandsNitrateEstimator.R and run the `mainNitrateEstimator` function.
 
-- **Use RStudio to run the core code:**  
-  Open the Central Sands Nitrate Application file and run the `mainNitrateEstimator` function to run the logic without the Shiny App.
+## Publishing code changes
 
----
+This RShiny app is automatically published to UW-Madison's Posit Connect service https://connect.doit.wisc.edu from Github.
+
+- Changes to the main branch are published to [https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/](https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/)
+- Changes to the dev branch are published to [https://connect.doit.wisc.edu/dev-wgnhs-central-sands-groundwater/](https://connect.doit.wisc.edu/dev-wgnhs-central-sands-groundwater/)
+
+To publish code changes, you need to push them to the dev branch of this repository https://github.com/wgnhs/Central-Sands-Nitrate, then open and merge a pull request to the main branch.
+
+**IMPORTANT! Only WGNH affiliates who are members of the WGNHS Github organization can publish code changes.Contact WGNHS IT staff to add your Github account to the WGNHS Github organization.**
+
+### Publish changes to dev environment
+
+1. Switch to the dev branch in RStudio by clicking the branches menu in the Git panel and choosing dev
+2. Make your code changes, save and click Run App to preview your changes locally
+3. Changed files will appear in the Git panel. Click the checkbox beside each modified file to Stage files for pushing to Github.
+4. In the Git panel, click the Commit button.
+5. Make sure dev is selected in the branch menu, then type a description of the changes in the Commit Message box and click the Commit button.
+6. In the Git panel, make sure dev is selected in the branch menu and click the Push button to send the code changes to Github.
+7. Changes to the dev branch will be automatically published to [https://connect.doit.wisc.edu/dev-wgnhs-central-sands-groundwater/](https://connect.doit.wisc.edu/dev-wgnhs-central-sands-groundwater/) . It may take several minutes for the changes to appear.
+
+### Publish changes to production environment
+To published changes to the production environment, you must first complete tthe steps above to publish changes to the dev Github branch and dev Posit Connect environment. Changes to the production environment require a Github pull request, which must be merged approved and merged by another WGNHS Github user.
+
+2. Log into [Github](https://github.com/) . 
+3. Go to the {WGNHS Central-Sands-Nitrate repository](https://github.com/wgnhs/Central-Sands-Nitrate) and click the [Pull Requests tab](https://github.com/wgnhs/Central-Sands-Nitrate/pulls).
+4. Click New Pull Request and select the following settings:
+    - base repository: wgnhs/Central-Sands-Nitrate
+    - base: main
+    - compare: dev
+5. Review the changes shown in the list of commits, then click Create pull request
+6. Enter a title and description for the pull request, assign another WGNHS Github user (lizkrznarich or schoep) as a reviewer and click Create pull request
+7. The pull request will be approved and merged to the main branch by the reviewe. Once merged, changes will be automatically deployed to [https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/](https://connect.doit.wisc.edu/wgnhs-central-sands-groundwater/)
 
 ## Pseudocode
 
