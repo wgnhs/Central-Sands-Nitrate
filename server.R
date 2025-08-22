@@ -202,6 +202,22 @@ function(input, output, session) {
   })
   
   #Pass some output text to the UI
+  output$appDisclaimer <- renderText({
+    paste0(h2("Disclaimer"),
+          "This representation of flow paths, land use, and transit times in the Central Sands of Wisconsin is provided by the Wisconsin Geological and Natural History Survey (WGNHS) on an as is basis.","<br>",
+           "WGNHS will not be liable for any damages of any kind arising from the use of these data, including, but not limited to direct, indirect, punitive, and consequential.","<br>",
+           "WGNHS makes no warranties on these data, express, implied, statutory, or in any other provision of any agreement or communication, and specifically disclaims any implied warranties of merchantability or fitness for a particular purpose.")
+  })
+  output$appPurpose <- renderText({
+    paste0(h2("Purpose"),
+           "This app was created to assist with decisions concerning groundwater source locations, travel paths, and transit times in the Central Sands of Wisconsin.","<br>",
+           "It was created by the WGNHS with input and review by UW-Madison Extension, and Portage County.")
+  })
+  output$appHowTo <- renderText({
+    paste0(h2("How to Use"),
+           "Select the Interactive Map tab above.  That will bring up a map of the central sands.  Select a point within the Central Sands to see predicted flow paths, land use, and transit times.")
+  })
+  
   output$mapExplainer <- renderText({
     displayLat <- format(round(current_marker$lat, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
     displayLng <- format(round(current_marker$lng, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
@@ -239,12 +255,11 @@ function(input, output, session) {
            )
   })
   output$takeAction <- renderText({
-    paste0(h2("Action"),
-           "If your well has a high percentage of agricultural contributing zones, we recommend you test your well.",
-           "You can ",
-           tags$a(href = "https://cnroutreached.asapconnected.com/#ProductCategory=WEAL", "order a test here.", target = "_blank"), "<br>",
-           "To learn more about well water quality, you can visit ",
-           tags$a(href = "https://dnr.wisconsin.gov/topic/Wells", "the Wisconsin Department of Natural Resource's website.")
+    paste0(h2("App Purpose and Disclaimer"),
+           "This app was created to assist with decisions concerning groundwater source locations, travel paths, and transit times in the Central Sands of Wisconsin.","<br>",
+           "This representation of depth-to-bedrock over the Silurian dolomite in eastern Wisconsin is provided by the Wisconsin Geological and Natural History Survey (WGNHS) on an as is basis.","<br>",
+           "WGNHS will not be liable for any damages of any kind arising from the use of these data, including, but not limited to direct, indirect, punitive, and consequential.","<br>",
+           "WGNHS makes no warranties on these data, express, implied, statutory, or in any other provision of any agreement or communication, and specifically disclaims any implied warranties of merchantability or fitness for a particular purpose."
            )
   })
   

@@ -7,8 +7,23 @@ dashboardPage(
   dashboardBody(
     tabsetPanel(
       id = "mainPanel",
+
+      #First tab - Purpose and Disclaimer----
+      tabPanel(
+        title = "Purpose and Disclaimer",
+        fluidRow(
+          box(width = 8, htmlOutput("appPurpose"))
+        ),
+        fluidRow(
+          box(width = 8, htmlOutput("appDisclaimer"))
+        ),
+        fluidRow(
+          box(width = 8, htmlOutput("appHowTo"))
+        )
+      ),
       
-      #First tab - Interactive Display----
+      
+      #Second tab - Interactive Display----
       tabPanel(
         title = "Interactive Map",
         fluidRow(
@@ -17,11 +32,11 @@ dashboardPage(
           box(width = 4, withSpinner(plotOutput(outputId = "flowTimeHistogram", height = "500px"), caption ="Processing Transit Times..."), htmlOutput("transitTimeExplainer"))
           ),
         fluidRow(
-          box(htmlOutput("takeAction"))
+          box(width = 12, htmlOutput("takeAction"))
           )
         ),
       
-      #Second tab - Additional Info----
+      #Third tab - Additional Info----
       tabPanel(
         title = "Additional Information",
         fluidRow(
