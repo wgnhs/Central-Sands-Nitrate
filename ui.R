@@ -38,15 +38,23 @@ dashboardPage(
       
       #Third tab - Additional Info----
       tabPanel(
-        title = "Additional Information",
+        title = "Additional Resources",
         fluidRow(
           box(htmlOutput("externalLinks"))
           ),
         fluidRow(
           box(width = 6, htmlOutput("modelAssumptions"))
+          ),
+        fluidRow(
+          column(width = 6, h2("2D versus 3D pathlines"), "The interactive map shows the horizontal flows but the flow paths shown in the map also flow vertically.
+           The figure shown to the right illustrates this. Flows that start farther away from the discharge point are deeper and those nearer are more shallow
+           The longer and deeper flow paths take longer to reach their discharge points and so they are generally older.
+           The shorter and shallower flow paths take less time to reach their discharge points and so they are generally younger.
+           In general, longer flow paths are deeper and older and shorter flowpaths are younger and more shallow."),
+          column(width = 6, imageOutput("groundWaterImage")),
           )
         )
-      )
+        )
     ),
   title = "Interactive Groundwater Flow Map"
 )

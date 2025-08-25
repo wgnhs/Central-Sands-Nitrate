@@ -7,7 +7,7 @@ function(input, output, session) {
     leaflet() %>%
       setView(lng = defaultLng, lat = defaultLat, zoom = 8) %>%
       addProviderTiles("Esri.WorldImagery", group = "Aerial") %>% #Aerial Photo Base Layer
-      addProviderTiles("Stadia.StamenTerrain", group = "Terrain") %>%
+      addProviderTiles("OpenTopoMap", group = "Terrain") %>%
       addProviderTiles("OpenStreetMap.Mapnik", group = "Default") %>% #Default Base Layer
       addCircleMarkers(data = pumpingWells,
                   group = "Pumping Wells",
@@ -211,7 +211,8 @@ function(input, output, session) {
   output$appPurpose <- renderText({
     paste0(h2("Purpose"),
            "This app was created to assist with decisions concerning groundwater source locations, travel paths, and transit times in the Central Sands of Wisconsin.","<br>",
-           "It was created by the WGNHS with input and review by UW-Madison Extension, and Portage County.")
+           "It was created by the WGNHS with input and review by UW-Madison Extension, and Portage County.","<br>",
+           "For questions about the app, contact David Hart at the Wisconsin Geological and Natural History Survey (djhart@wisc.edu) or Jennifer McNelly, Wood County Extension (jennifer.mcnelly@wisc.edu)")
   })
   output$appHowTo <- renderText({
     paste0(h2("How to Use"),
@@ -223,8 +224,8 @@ function(input, output, session) {
     displayLng <- format(round(current_marker$lng, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
     paste0(h2("Map Explanation"),
            "Click or drag the marker within the bounded region to get estimated land use from groundwater contributing zones.", "<br>",
-           "The orange dots represent simulated groundwater entry points.", "<br>",
-           "The blue lines represent the modeled groundwater flow paths.", "<br>",
+           "The orange dots represent simulated groundwater entry points. This is the point associated with the contributing zone land cover", "<br>",
+           "The blue lines represent the modeled groundwater flow paths. The land cover above the blue line is not included in the land cover chart.", "<br>",
            "Current marker latitude: ", displayLat, "<br>",
            "Current marker longitude: ", displayLng, "<br>")
   })
@@ -242,16 +243,27 @@ function(input, output, session) {
            "This chart shows the distribution of transit times for the modeled flow paths.")
   })
   output$externalLinks <- renderText({
-    paste0(h2("Additional Info"),
-           tags$ul(
-             tags$li(a(href ="https://www.epa.gov/mn/what-nitrate", "Learn about Nitrate from the Environmental Protection Agency", target = "_blank")),
-             tags$li(a(href = "https://www3.uwsp.edu/cnr-ap/watershed/Pages/default.aspx", "See more maps at the UW-Stevens Point Center for Watershed Science and Education", target = "_blank")),
-             tags$li("Learn about the modeling software used: "),
+    paste0(h2("Additional Resources"),
+
+           tags$li("Learn about groundwater in the Central Sands"),
+             tags$ul(
+               tags$li(a(href ="https://dnr.wisconsin.gov/topic/Wells/HighCap/CSLStudy.html", "Learn about the aquifers and ground water system from the WDNR's Central Sands Lake Study", target = "_blank")),
+               tags$li(a(href = "https://www3.uwsp.edu/cnr-ap/watershed/Pages/default.aspx", "See more maps and groundwater information at the UW-Stevens Point Center for Watershed Science and Education", target = "_blank")),
+               tags$li(a(href = "https://wgnhs.wisc.edu/catalog/publication/000960/resource/wofr201804", "An overview of available research related to the Central Sands Lakes Study (CSLS).", target = "_blank"))),             
+
+               tags$li("Learn about the modeling software and land cover data used: "),
              tags$ul(
                tags$li(a(href = "https://www.usgs.gov/mission-areas/water-resources/science/modflow-and-related-programs", "MODFLOW", target = "_blank")),
-               tags$li(a(href = "https://www.usgs.gov/software/modpath-particle-tracking-model-modflow", "MODPATH", target = "_blank"))
-               )
-             )
+               tags$li(a(href = "https://www.usgs.gov/software/modpath-particle-tracking-model-modflow", "MODPATH", target = "_blank")),
+               tags$li(a(href = "https://dnr.wisconsin.gov/maps/WISCLAND", "Wiscland 2.0 Land Cover Data", target = "_blank"))),
+    
+           tags$li("The app results are based on these two peer reviewed papers"),
+             tags$ul(
+               tags$li(a(href = "https://gsa.confex.com/gsa/2023NC/meetingapp.cgi/Paper/386995", "Placeholder for -> A regional model comparison between MODPATH and MT3D of groundwater travel time distributions", target = "_blank")),
+               tags$li(a(href = "https://doi.org/10.3133/sir20225046", "Simulation of Regional Groundwater Flow and Groundwater/Lake Interactions in the Central Sands, Wisconsin", target = "_blank")))
+                 
+               
+             
            )
   })
   output$limitationsAndDataSources <- renderText({
@@ -259,7 +271,7 @@ function(input, output, session) {
            "This app uses flow path data from Baker et al, 2025. Those flow paths were based on Fienen et al, 2022, Simulation of Regional Groundwater Flow and Groundwater/Lake Interactions in the Central Sands, Wisconsin.","<br>",
            "The land use data is from Wiscland 2.0, Levels 1 and 3. See the additional information tab for these references and more background information.","<br>","<br>",
            "In general the model is representative of groundwater movement but the flow paths are a model representation of the groundwater flows and as such cannot be expected to provide a perfect match actual groundwater movement.","<br>",
-           "As a result, these results should not be over interpreted represent estimates. There is significant error associated with the flow paths, including the timing, start and end points.","<br>",
+           "As a result, these results should not be over interpreted. There is significant error associated with the flow paths, including the timing, start and end points.","<br>",
            "For example, there are a few known reaches of the stream network that are not properly represented in the model. In addition, variations in groundwater recharge and land use also introduce error."
            )
   })
@@ -267,27 +279,24 @@ function(input, output, session) {
   output$modelAssumptions <- renderText({
     paste0(h2("Model Assumptions"),
            "There are many assumptions that go into the Nitrate estimates from this model. This model makes the following assumptions and simplifications:",
-           tags$li("It assumes uniform nitrate application in an area."),
-           tags$li("It assumes land cover is an exact proxy for nitrate application."),
-           tags$li("It assumes land cover has remained constant over time."),
-           tags$li("It does not account  for the time or distance of the groundwater flow."),
+           tags$li("It assumes steady-state groundwater flow."),           
+           tags$li("It assumes a constant aquifer porosity and does not account for different soil types."),           
            tags$li("It does not account for groundwater depth."),
-           tags$li("It assumes CropScape is accurate."),
-           tags$li("It only uses groundwater as a predictor, and does not account for the effects of precipitation or runoff."),
-           tags$li("It assumes a constant soil porosity and does not account for different soil types."),
-           tags$li("It assumes steady-state nitrate application and groundwater flow."),
-           tags$li("Only the land cover of the contributing points is considered; land cover in between the contributing zones and selected regions is not accounted for."),
+           tags$li("It assumes CropScape is representative of current and past landuse."),           
+           tags$li("Only the land cover at the contributing points is considered; land cover in between the contributing zones and selected point is not accounted for."),
            tags$li("The selected region is buffered to a circle with a 100 meter radius.")
            )
   })
-  
+
+
   output$groundWaterImage  <- renderImage({
     list(src = file.path("www/groundWaterDiagram.png"),
          contentType = "image/png",
          style = "max-width: 100%; max-height: 100%")
     }, deleteFile = FALSE)
   
-  output$flowlines3D <- renderUI({
+
+    output$flowlines3D <- renderUI({
     tags$iframe(src = "test3Dflowlines.html", width = "100%", height = "600px")
   })
 }
