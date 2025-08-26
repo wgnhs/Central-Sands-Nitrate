@@ -19,7 +19,12 @@ dashboardPage(
         ),
         fluidRow(
           box(width = 8, htmlOutput("appHowTo"))
+        ),
+        fluidRow(
+          column(width = 4, img(src = "CentralSandsFlowPaths_1inch.png")),
+          column(width = 4, img(src = "WGNHS_color-flush-150ppi_2inch.png")),
         )
+        
       ),
       
       
