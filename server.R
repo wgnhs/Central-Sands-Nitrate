@@ -202,23 +202,6 @@ function(input, output, session) {
   })
   
   #Pass some output text to the UI
-  output$appDisclaimer <- renderText({
-    paste0(h2("Disclaimer"),
-          "This representation of flow paths, land use, and transit times in the Central Sands of Wisconsin is provided by the Wisconsin Geological and Natural History Survey (WGNHS) on an as is basis.","<br>",
-           "WGNHS will not be liable for any damages of any kind arising from the use of these data, including, but not limited to direct, indirect, punitive, and consequential.","<br>",
-           "WGNHS makes no warranties on these data, express, implied, statutory, or in any other provision of any agreement or communication, and specifically disclaims any implied warranties of merchantability or fitness for a particular purpose.")
-  })
-  output$appPurpose <- renderText({
-    paste0(h2("Purpose"),
-           "This app was created to assist with decisions concerning groundwater source locations, travel paths, and transit times in the Central Sands of Wisconsin.","<br>",
-           "It was created by the WGNHS with input and review by UW-Madison Extension, and Portage County.","<br>",
-           "For questions about the app, contact David Hart at the Wisconsin Geological and Natural History Survey (djhart@wisc.edu) or Jennifer McNelly, Wood County Extension (jennifer.mcnelly@wisc.edu)")
-  })
-  output$appHowTo <- renderText({
-    paste0(h2("How to Use"),
-           "Select the Interactive Map tab above.  That will bring up a map of the central sands.  Select a point within the Central Sands to see predicted flow paths, land use, and transit times.")
-  })
-  
   output$mapExplainer <- renderText({
     displayLat <- format(round(current_marker$lat, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
     displayLng <- format(round(current_marker$lng, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
@@ -261,21 +244,9 @@ function(input, output, session) {
              tags$ul(
                tags$li(a(href = "https://gsa.confex.com/gsa/2023NC/meetingapp.cgi/Paper/386995", "Placeholder for -> A regional model comparison between MODPATH and MT3D of groundwater travel time distributions", target = "_blank")),
                tags$li(a(href = "https://doi.org/10.3133/sir20225046", "Simulation of Regional Groundwater Flow and Groundwater/Lake Interactions in the Central Sands, Wisconsin", target = "_blank")))
-                 
-               
-             
            )
   })
-  output$limitationsAndDataSources <- renderText({
-    paste0(h2("Limitations and Data Sources"),
-           "This app uses flow path data from Baker et al, 2025. Those flow paths were based on Fienen et al, 2022, Simulation of Regional Groundwater Flow and Groundwater/Lake Interactions in the Central Sands, Wisconsin.","<br>",
-           "The land use data is from Wiscland 2.0, Levels 1 and 3. See the additional information tab for these references and more background information.","<br>","<br>",
-           "In general the model is representative of groundwater movement but the flow paths are a model representation of the groundwater flows and as such cannot be expected to provide a perfect match actual groundwater movement.","<br>",
-           "As a result, these results should not be over interpreted. There is significant error associated with the flow paths, including the timing, start and end points.","<br>",
-           "For example, there are a few known reaches of the stream network that are not properly represented in the model. In addition, variations in groundwater recharge and land use also introduce error."
-           )
-  })
-  
+
   output$modelAssumptions <- renderText({
     paste0(h2("Model Assumptions"),
            "There are many assumptions that go into the Nitrate estimates from this model. This model makes the following assumptions and simplifications:",
