@@ -43,8 +43,8 @@ dashboardPage(
           box(width = 8, h2("How to Use"), "Select the Interactive Map tab above.  That will bring up a map of the central sands.  Select a point within the Central Sands to see predicted flow paths, land use, and transit times.")
         ),
         fluidRow(
-          column(width = 4, img(src = "CentralSandsFlowPaths_1inch.png")),
-          column(width = 4, img(src = "WGNHS_color-flush-150ppi_2inch.png")),
+          column(width = 2, img(src = "CentralSandsFlowPaths_1inch.png")),
+          column(width = 2, img(src = "WGNHS_color-flush-150ppi_2inch.png")),
         )
         
       ),
