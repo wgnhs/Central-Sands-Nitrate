@@ -207,7 +207,7 @@ function(input, output, session) {
     displayLng <- format(round(current_marker$lng, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
     paste0(h2("Map Explanation"),
            "Click or drag the marker within the bounded region to get estimated land use from groundwater contributing zones.", "<br>",
-           "The orange dots represent simulated groundwater entry points. This is the point associated with the contributing zone land cover", "<br>",
+           "The orange dots represent simulated groundwater entry points. This is the point associated with the contributing zone land cover.", "<br>",
            "The blue lines represent the modeled groundwater flow paths. The land cover above the blue line is not included in the land cover chart.", "<br>",
            "Current marker latitude: ", displayLat, "<br>",
            "Current marker longitude: ", displayLng, "<br>")
@@ -249,7 +249,7 @@ function(input, output, session) {
 
   output$modelAssumptions <- renderText({
     paste0(h2("Model Assumptions"),
-           "There are many assumptions that go into the Nitrate estimates from this model. This model makes the following assumptions and simplifications:",
+           "There are many assumptions that go into the estimated groundwater flow paths from this model. This model makes the following assumptions and simplifications:",
            tags$li("It assumes steady-state groundwater flow."),           
            tags$li("It assumes a constant aquifer porosity and does not account for different soil types."),           
            tags$li("It does not account for groundwater depth."),
