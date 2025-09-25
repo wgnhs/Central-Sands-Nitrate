@@ -242,7 +242,7 @@ function(input, output, session) {
     
            tags$li("The app results are based on these two peer reviewed papers"),
              tags$ul(
-               tags$li(a(href = "https://gsa.confex.com/gsa/2023NC/meetingapp.cgi/Paper/386995", "Placeholder for -> A regional model comparison between MODPATH and MT3D of groundwater travel time distributions", target = "_blank")),
+               tags$li(a(href = "https://ngwa.onlinelibrary.wiley.com/doi/10.1111/gwat.70024", "A regional model comparison between MODPATH and MT3D of groundwater travel time distributions", target = "_blank")),
                tags$li(a(href = "https://doi.org/10.3133/sir20225046", "Simulation of Regional Groundwater Flow and Groundwater/Lake Interactions in the Central Sands, Wisconsin", target = "_blank")))
            )
   })
