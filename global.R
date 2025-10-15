@@ -12,6 +12,7 @@
 # 0 Libraries----
 library(sf)
 library(shiny)
+library(shinyjs)
 library(leaflet)
 library(leaflet.extras2)
 library(dplyr)

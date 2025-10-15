@@ -2,6 +2,54 @@
 
 #Function for shiny server code
 function(input, output, session) {
+  
+  # Set the correct password
+  correct_password <- "wgnhs"
+  
+  showModal(modalDialog(
+    title = "Enter password to access",
+    "A password is needed to access this application. To obtain a password, please contact David Hart at the Wisconsin Geological and Natural History Survey (djhart@wisc.edu) or Jennifer McNelly, Wood County Extension (jennifer.mcnelly@wisc.edu)",
+    easyClose = FALSE,
+    footer = div( style = "text-align: left;",
+          passwordInput("password_entry", "Password", width = "100%"),
+          actionButton("password_submit", "Log in")
+        )
+  ))
+  
+  # Handle the password logic after the user submits it
+  observeEvent(input$password_submit, {
+    print("observe")
+    removeModal()
+    # Check if the user clicked "Cancel" or closed the modal
+    if (is.null(input$password_entry)) {
+      return()
+    }
+    # Check if the entered password is correct
+    if (input$password_entry == correct_password) {
+      print("success")
+      showModal(modalDialog(
+        title = "Success!",
+        "You are now logged in.",
+        easyClose = TRUE,
+        footer = modalButton("OK")
+      ))
+    } else {
+      print("fail")
+      showModal(modalDialog(
+        title = "Error",
+        "The password you entered was not correct.",
+        easyClose = FALSE,
+        footer = actionButton("return_login", "Return to login")
+      ))# Hide the secured content
+      output$secured_content <- NULL
+    }
+  })
+  
+  observeEvent(input$return_login, {
+    print("reload")
+    session$reload()
+  })
+
   #Initial call to create map-----
   output$map <- renderLeaflet({
     leaflet() %>%

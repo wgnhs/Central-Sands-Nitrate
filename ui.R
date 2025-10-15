@@ -5,6 +5,15 @@ dashboardPage(
   dashboardHeader(disable = TRUE),
   dashboardSidebar(disable = TRUE),
   dashboardBody(
+    tags$head(
+      tags$script(HTML("
+          $(document).keyup(function(event) {
+            if (event.keyCode == 13) { // 13 is the Enter key code
+              $('#password_submit').click(); // Replace 'myActionButton' with your button's inputId
+            }
+          });
+        "))
+    ),
     tabsetPanel(
       id = "mainPanel",
 
