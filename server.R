@@ -6,6 +6,7 @@ function(input, output, session) {
   # Set the correct password
   correct_password <- "wgnhs"
   
+  # Show password prompt when page loads
   showModal(modalDialog(
     title = "Enter password to access",
     "A password is needed to access this application. To obtain a password, please contact David Hart at the Wisconsin Geological and Natural History Survey (djhart@wisc.edu) or Jennifer McNelly, Wood County Extension (jennifer.mcnelly@wisc.edu)",
@@ -20,13 +21,15 @@ function(input, output, session) {
   observeEvent(input$password_submit, {
     print("observe")
     removeModal()
-    # Check if the user clicked "Cancel" or closed the modal
+    # Check if the user clicked login without entering any password
     if (is.null(input$password_entry)) {
       return()
     }
     # Check if the entered password is correct
     if (input$password_entry == correct_password) {
+      # debug
       print("success")
+      # If correct, show success message
       showModal(modalDialog(
         title = "Success!",
         "You are now logged in.",
@@ -34,19 +37,23 @@ function(input, output, session) {
         footer = modalButton("OK")
       ))
     } else {
-      print("fail")
+      # debug
+      print("error")
+      # If correct, show success error message
       showModal(modalDialog(
         title = "Error",
         "The password you entered was not correct.",
         easyClose = FALSE,
         footer = actionButton("return_login", "Return to login")
       ))# Hide the secured content
-      output$secured_content <- NULL
     }
   })
   
+  # Reload function for return to login button on password error screen
   observeEvent(input$return_login, {
+    # debug
     print("reload")
+    # Reload page
     session$reload()
   })
 
