@@ -297,8 +297,8 @@ function(input, output, session) {
     
            tags$li("The app results are based on these two peer reviewed papers"),
              tags$ul(
-               tags$li(a(href = "https://ngwa.onlinelibrary.wiley.com/doi/10.1111/gwat.70024", "A regional model comparison between MODPATH and MT3D of groundwater travel time distributions", target = "_blank")),
-               tags$li(a(href = "https://doi.org/10.3133/sir20225046", "Simulation of Regional Groundwater Flow and Groundwater/Lake Interactions in the Central Sands, Wisconsin", target = "_blank")))
+               tags$li("Baker, E.A., Juckem, P., Feinstein, D., and Hart, D., 2025, A regional model comparison between MODPATH and MT3D of groundwater travel time distributions: Groundwater, ", a(href = "https://ngwa.onlinelibrary.wiley.com/doi/10.1111/gwat.70024", "https://doi.org/10.1111/gwat.70024", target = "_blank")),
+               tags$li("Fienen, M.N., Haserodt, M.J., Leaf, A.T., and Westenbroek, S.M., 2022, Simulation of regional groundwater flow and groundwater/lake interactions in the Central Sands, Wisconsin: U.S. Geological Survey Scientific Investigations Report 2022–5046, 111 p., ", a(href = "https://doi.org/10.3133/sir20225046", "https://doi.org/10.3133/sir20225046", target = "_blank")))
            )
   })
 
@@ -310,7 +310,7 @@ function(input, output, session) {
            tags$li("It does not account for groundwater depth."),
            tags$li("It assumes CropScape is representative of current and past landuse."),           
            tags$li("Only the land cover at the contributing points is considered; land cover in between the contributing zones and selected point is not accounted for."),
-           tags$li("The selected region is buffered to a circle with a 100 meter radius.")
+           tags$li("The selected region is buffered to a circle with a 1/4 mile (402 meter) diameter.")
            )
   })
 

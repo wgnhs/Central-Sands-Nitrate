@@ -152,7 +152,7 @@ getTimeFrameOfInterest <- function() {
 #' Buffer size is currently hard-coded, but could be modified to allow for front-end user input
 #' @returns a number for our buffer size
 getBuffer <- function() {
-  buffer = 100 #100 meters was chosen somewhat arbitrarily
+  buffer = 201 #201 meters was chosen somewhat arbitrarily but corresponds to a diameter of 1/4 mile.
   return(buffer)
 }
 
