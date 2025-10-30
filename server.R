@@ -261,11 +261,13 @@ function(input, output, session) {
     displayLat <- format(round(current_marker$lat, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
     displayLng <- format(round(current_marker$lng, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
     paste0(h2("Map Explanation"),
-           "Click or drag the marker within the bounded region to get estimated land use from groundwater contributing zones.", "<br>",
+           "Click or drag the marker within the gray outline of the Central Sands.", "<br>",
            "The orange dots represent simulated groundwater entry points. This is the point associated with the contributing zone land cover.", "<br>",
            "The blue lines represent the modeled groundwater flow paths. The land cover above the blue line is not included in the land cover chart.", "<br>",
-           "Current marker latitude: ", displayLat, "<br>",
-           "Current marker longitude: ", displayLng, "<br>")
+           "The Pumping Wells option in the legend displays high capacity wells.", "<br>",
+           "The Flow Paths option in the legend displays general groundwater flow direction.", "<br>",
+           "Current marker latitude (degrees N): ", displayLat, "<br>",
+           "Current marker longitude (degrees E): ", displayLng, "<br>")
   })
   output$landCoverExplainer <- renderText({
     no3fit <- format(round(nO3Prediction()$fit, digits = 1), nsmall = 1) #intentionally not using the point estimate prediction, as it projects too much certainty
@@ -273,7 +275,7 @@ function(input, output, session) {
     no3upr <- format(round(nO3Prediction()$upr, digits = 1), nsmall = 1)
     no3Units <- "mg/L"
     paste0(h2("Chart Explanation"),
-           "This bar chart shows the break down of land cover for the groundwater entry points.", "<br>")
+           "This bar chart shows the land cover at the groundwater entry points.", "<br>")
   })
   
   output$transitTimeExplainer <- renderText({
@@ -286,19 +288,19 @@ function(input, output, session) {
            tags$li("Learn about groundwater in the Central Sands"),
              tags$ul(
                tags$li(a(href ="https://dnr.wisconsin.gov/topic/Wells/HighCap/CSLStudy.html", "Learn about the aquifers and ground water system from the WDNR's Central Sands Lake Study", target = "_blank")),
-               tags$li(a(href = "https://www3.uwsp.edu/cnr-ap/watershed/Pages/default.aspx", "See more maps and groundwater information at the UW-Stevens Point Center for Watershed Science and Education", target = "_blank")),
-               tags$li(a(href = "https://wgnhs.wisc.edu/catalog/publication/000960/resource/wofr201804", "An overview of available research related to the Central Sands Lakes Study (CSLS).", target = "_blank"))),             
+               tags$li(a(href = "https://www3.uwsp.edu/cnr-ap/watershed/Pages/default.aspx", "See more maps and groundwater information at the UW–Stevens Point Center for Watershed Science and Education", target = "_blank")),
+               tags$li(a(href = "https://wgnhs.wisc.edu/catalog/publication/000960/resource/wofr201804", "An overview of available research related to the Central Sands Lakes Study.", target = "_blank"))),             
 
-               tags$li("Learn about the modeling software and land cover data used: "),
+               tags$li("Learn about the software and land cover data used by the model: "),
              tags$ul(
                tags$li(a(href = "https://www.usgs.gov/mission-areas/water-resources/science/modflow-and-related-programs", "MODFLOW", target = "_blank")),
                tags$li(a(href = "https://www.usgs.gov/software/modpath-particle-tracking-model-modflow", "MODPATH", target = "_blank")),
                tags$li(a(href = "https://dnr.wisconsin.gov/maps/WISCLAND", "Wiscland 2.0 Land Cover Data", target = "_blank"))),
     
-           tags$li("The app results are based on these two peer reviewed papers"),
+           tags$li("The app results are based on these two peer reviewed papers:"),
              tags$ul(
-               tags$li("Baker, E.A., Juckem, P., Feinstein, D., and Hart, D., 2025, A regional model comparison between MODPATH and MT3D of groundwater travel time distributions: Groundwater, ", a(href = "https://ngwa.onlinelibrary.wiley.com/doi/10.1111/gwat.70024", "https://doi.org/10.1111/gwat.70024", target = "_blank")),
-               tags$li("Fienen, M.N., Haserodt, M.J., Leaf, A.T., and Westenbroek, S.M., 2022, Simulation of regional groundwater flow and groundwater/lake interactions in the Central Sands, Wisconsin: U.S. Geological Survey Scientific Investigations Report 2022–5046, 111 p., ", a(href = "https://doi.org/10.3133/sir20225046", "https://doi.org/10.3133/sir20225046", target = "_blank")))
+               tags$li("Baker, E.A., Juckem, P., Feinstein, D., and Hart, D., 2025, A regional model comparison between MODPATH and MT3D of groundwater travel time distributions: Groundwater, ", a(href = "https://ngwa.onlinelibrary.wiley.com/doi/10.1111/gwat.70024", "https://doi.org/10.1111/gwat.70024.", target = "_blank")),
+               tags$li("Fienen, M.N., Haserodt, M.J., Leaf, A.T., and Westenbroek, S.M., 2022, Simulation of regional groundwater flow and groundwater/lake interactions in the Central Sands, Wisconsin: U.S. Geological Survey Scientific Investigations Report 2022–5046, 111 p., ", a(href = "https://doi.org/10.3133/sir20225046", "https://doi.org/10.3133/sir20225046.", target = "_blank")))
            )
   })
 
@@ -308,9 +310,9 @@ function(input, output, session) {
            tags$li("It assumes steady-state groundwater flow."),           
            tags$li("It assumes a constant aquifer porosity and does not account for different soil types."),           
            tags$li("It does not account for groundwater depth."),
-           tags$li("It assumes CropScape is representative of current and past landuse."),           
-           tags$li("Only the land cover at the contributing points is considered; land cover in between the contributing zones and selected point is not accounted for."),
-           tags$li("The selected region is buffered to a circle with a 1/4 mile (402 meter) diameter.")
+           tags$li("It assumes Wiscland land cover data are representative of current and past landuse."),           
+           tags$li("Only the land cover at the contributing points is considered; land cover in between the contributing points and selected point is not included."),
+           tags$li("The selected location (marker) is buffered to a circle with a 1/4 mile (402 meter) diameter.")
            )
   })
 
