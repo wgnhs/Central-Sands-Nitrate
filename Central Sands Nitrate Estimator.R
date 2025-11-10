@@ -251,27 +251,16 @@ getFLOTimes <- function(floSet, coordBufferZone) {
   #Stictly speaking, it's possible something just touched the buffer without going inside (e.g., a tangent line), in which case we'll only have it split into 2.
   #This is a rare scenario, but we'll handle it regardless
   floSplitSet <- st_split(floSet, coordBufferZone)
-  #print("Flo split set result")
-  #print(floSplitSet)
-  #print("Buffer zone coords")
-  #print(coordBufferZone)
-  
+
   #Extract the output of st_split into something we can work with
   floExtractSet <- st_collection_extract(floSplitSet, type = "LINESTRING")
-  #print("Flo extract st_collection_extract")
-  #print(floExtractSet)
-
   floExtractSet <- getFLOSegmentLengths(floExtractSet)
-  #print("Flo extract get flo segment lengths")
-  #print(floExtractSet)
-
   
   #Initialize a data frame to store our results
   newColNames <- c("time_to_center")
   floRowCount <- nrow(floSet)
   floTimes <- data.frame(matrix(ncol = length(newColNames), nrow = floRowCount))
   colnames(floTimes) <- newColNames
-  
   
   totalSegments <- 0
   segmentOneInsideBuffer <- 0
@@ -282,33 +271,24 @@ getFLOTimes <- function(floSet, coordBufferZone) {
   for(floIndex in 1:floRowCount){
      partIDLoc <- getNumValueFromSFDF(floSet, floIndex, "conversion_to_partidloc_")
      floSegments <- floExtractSet[floExtractSet$conversion_to_partidloc_ == partIDLoc, ]
-  #   
-  #   for(i in 1:(nrow(floSegments))) {
-  #     print(i)
-  #     totalSegments <- totalSegments + 1
-  #     segment_within_result <- st_within(floSegments[i, ], coordBufferZone)
-  #     print(segment_within_result)
-  #     print(lengths(segment_within_result))
-  #     if (lengths(segment_within_result) > 0) {
-  #       segmentsInsideBuffer <- segmentsInsideBuffer + 1
-  #     }
-  #     if(i == 1){
-  #       # Check if first segment is inside buffer
-  #       segment1_within_buffer <- st_within(floSegments[i, ], coordBufferZone)
-  #       # Segment 1 is inside buffer, set length to 0
-  #       if (lengths(segment1_within_buffer) > 0) {
-  #         segment1Length <- 0
-  #       # Otherwise, get segment 1 length
-  #       } else {
-  #         segment1Length <- getNumValueFromSFDF(floSegments, i, "segment_length")
-  #       }
-  #       
-  #     }
-  #   }
-
+    
+    ############################ 
+    # PREVIOUS LOGIC
+    ############################ 
     #Get the length of our 1st segment
     #segment1Length <- getNumValueFromSFDF(floSegments, 1, "segment_length")
-    
+    #3 Segments
+    # if(nrow(floSegments) == 3) {
+    #   segment2Length <- getNumValueFromSFDF(floSegments, 2, "segment_length")
+    #   distToCenter <- (segment1Length + (segment2Length/2)) #We'll say the distance to the center is the length of the first segment plus have the length of the segment inside the buffer zone. It's imperfect, but a decent approximation
+    # } else { #2 Segments, or any other weird scenarios
+    #   distToCenter <- segment1Length #if we don't have 3 segments, just default to only the length of the first segment
+    # }
+    # 
+     
+    ############################ 
+    # NEW LOGIC
+    ############################ 
     # if the FLO has more than 1 segment, check if segment 1 is entirely inside buffer
     if(nrow(floSegments) > 1) {
 
@@ -331,24 +311,15 @@ getFLOTimes <- function(floSet, coordBufferZone) {
       distToCenter <- 0
       onlyOneSegment <- onlyOneSegment+1
     }
-      
-    #3 Segments
-    # if(nrow(floSegments) == 3) {
-    #   segment2Length <- getNumValueFromSFDF(floSegments, 2, "segment_length")
-    #   distToCenter <- (segment1Length + (segment2Length/2)) #We'll say the distance to the center is the length of the first segment plus have the length of the segment inside the buffer zone. It's imperfect, but a decent approximation
-    # } else { #2 Segments, or any other weird scenarios
-    #   distToCenter <- segment1Length #if we don't have 3 segments, just default to only the length of the first segment
-    # }
-    # 
+    
+    
     totalFLOTime <- getNumValueFromSFDF(floSegments, 1, "time") #the time and total length columns are the same for all, so just pull from row 1
     totalFLOLength <- getNumValueFromSFDF(floSegments, 1, "total_length")
     
     timeToCenter <- (totalFLOTime * (distToCenter / totalFLOLength))
     
-    print(paste("This is", date()))
-    
+    # Print statments for validating results
     print(paste("Values for floIndex ",  floIndex))
-    
     print(paste("totalFLOTime: ", totalFLOTime))
     print(paste("totalFLOLength: ", totalFLOLength))
     print(paste("timeToCenter: ", timeToCenter))
@@ -359,20 +330,16 @@ getFLOTimes <- function(floSet, coordBufferZone) {
   print("Total floset rows")
   print(floRowCount)
   
-
+  # Print statments for validating results
   print("Segment 1 inside buffer")
   print(segmentOneInsideBuffer)
-  
   print("Segment 1 outside buffer")
   print(segmentOneOutsideBuffer)
-  
   print("Only 1 segment")
   print(onlyOneSegment)
   
-  print(floTimes)
-  
   floSet <- cbind(floSet, floTimes)
-  print(floSet)
+
   return(floSet)
 }
 
