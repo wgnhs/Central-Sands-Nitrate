@@ -134,10 +134,8 @@ createSFPoint <- function(xCoord, yCoord) {
 #' Coordinates are currently hard-coded, but could be modified to allow for front-end user input
 #' @returns coordinates stored as an SF Point Object
 getCoordsOfInterest <- function() {
-  #xCoord <- -89.6168518
-  #yCoord <- 44.1309709
-  xCoord <- -89.6617627
-  yCoord <- 43.9302917
+  xCoord <- -89.6168518
+  yCoord <- 44.1309709
   coords <- createSFPoint(xCoord, yCoord)
   return(coords)
 }
