@@ -284,7 +284,7 @@ function(input, output, session) {
   })
   output$externalLinks <- renderText({
     paste0(h2("Additional Resources"),
-
+           tags$ul(
            tags$li("Learn about groundwater in the Central Sands"),
              tags$ul(
                tags$li(a(href ="https://dnr.wisconsin.gov/topic/Wells/HighCap/CSLStudy.html", "Learn about the aquifers and ground water system from the WDNR's Central Sands Lake Study", target = "_blank")),
@@ -301,19 +301,20 @@ function(input, output, session) {
              tags$ul(
                tags$li("Baker, E.A., Juckem, P., Feinstein, D., and Hart, D., 2025, A regional model comparison between MODPATH and MT3D of groundwater travel time distributions: Groundwater, ", a(href = "https://ngwa.onlinelibrary.wiley.com/doi/10.1111/gwat.70024", "https://doi.org/10.1111/gwat.70024.", target = "_blank")),
                tags$li("Fienen, M.N., Haserodt, M.J., Leaf, A.T., and Westenbroek, S.M., 2022, Simulation of regional groundwater flow and groundwater/lake interactions in the Central Sands, Wisconsin: U.S. Geological Survey Scientific Investigations Report 2022–5046, 111 p., ", a(href = "https://doi.org/10.3133/sir20225046", "https://doi.org/10.3133/sir20225046.", target = "_blank")))
-           )
+           ))
   })
 
   output$modelAssumptions <- renderText({
     paste0(h2("Model Assumptions"),
            "There are many assumptions that go into the estimated groundwater flow paths from this model. This model makes the following assumptions and simplifications:",
-           tags$li("It assumes steady-state groundwater flow."),           
-           tags$li("It assumes a constant aquifer porosity and does not account for different soil types."),           
-           tags$li("It does not account for groundwater depth."),
-           tags$li("It assumes Wiscland land cover data are representative of current and past landuse."),           
-           tags$li("Only the land cover at the contributing points is considered; land cover in between the contributing points and selected point is not included."),
-           tags$li("The selected location (marker) is buffered to a circle with a 1/4 mile (402 meter) diameter.")
-           )
+           tags$ul(
+             tags$li("It assumes steady-state groundwater flow."),           
+             tags$li("It assumes a constant aquifer porosity and does not account for different soil types."),           
+             tags$li("It does not account for groundwater depth."),
+             tags$li("It assumes Wiscland land cover data are representative of current and past landuse."),           
+             tags$li("Only the land cover at the contributing points is considered; land cover in between the contributing points and selected point is not included."),
+             tags$li("The selected location (marker) is buffered to a circle with a 1/4 mile (402 meter) diameter.")
+           ))
   })
 
 
