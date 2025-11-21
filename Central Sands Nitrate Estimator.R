@@ -152,7 +152,7 @@ getTimeFrameOfInterest <- function() {
 #' Buffer size is currently hard-coded, but could be modified to allow for front-end user input
 #' @returns a number for our buffer size
 getBuffer <- function() {
-  buffer = 100 #100 meters was chosen somewhat arbitrarily
+  buffer = 201 #201 meters was chosen somewhat arbitrarily but corresponds to a diameter of 1/4 mile.
   return(buffer)
 }
 
@@ -249,12 +249,10 @@ getFLOTimes <- function(floSet, coordBufferZone) {
   #Stictly speaking, it's possible something just touched the buffer without going inside (e.g., a tangent line), in which case we'll only have it split into 2.
   #This is a rare scenario, but we'll handle it regardless
   floSplitSet <- st_split(floSet, coordBufferZone)
-  
+
   #Extract the output of st_split into something we can work with
   floExtractSet <- st_collection_extract(floSplitSet, type = "LINESTRING")
-
   floExtractSet <- getFLOSegmentLengths(floExtractSet)
-
   
   #Initialize a data frame to store our results
   newColNames <- c("time_to_center")
@@ -262,32 +260,84 @@ getFLOTimes <- function(floSet, coordBufferZone) {
   floTimes <- data.frame(matrix(ncol = length(newColNames), nrow = floRowCount))
   colnames(floTimes) <- newColNames
   
+  totalSegments <- 0
+  segmentOneInsideBuffer <- 0
+  segmentOneOutsideBuffer <- 0
+  onlyOneSegment <- 0
   #Find our time to center of the buffer zone
   #Note: the "center", in this case, is simply the mid-point of the line inside the buffer zone, not the exact center of the circle
   for(floIndex in 1:floRowCount){
-    partIDLoc <- getNumValueFromSFDF(floSet, floIndex, "conversion_to_partidloc_")
-    floSegments <- floExtractSet[floExtractSet$conversion_to_partidloc_ == partIDLoc, ]
+     partIDLoc <- getNumValueFromSFDF(floSet, floIndex, "conversion_to_partidloc_")
+     floSegments <- floExtractSet[floExtractSet$conversion_to_partidloc_ == partIDLoc, ]
     
+    ############################ 
+    # PREVIOUS LOGIC
+    ############################ 
     #Get the length of our 1st segment
-    segment1Length <- getNumValueFromSFDF(floSegments, 1, "segment_length")
-    
+    #segment1Length <- getNumValueFromSFDF(floSegments, 1, "segment_length")
     #3 Segments
-    if(nrow(floSegments) == 3) {
-      segment2Length <- getNumValueFromSFDF(floSegments, 2, "segment_length")
-      distToCenter <- (segment1Length + (segment2Length/2)) #We'll say the distance to the center is the length of the first segment plus have the length of the segment inside the buffer zone. It's imperfect, but a decent approximation
-    } else { #2 Segments, or any other weird scenarios
-      distToCenter <- segment1Length #if we don't have 3 segments, just default to only the length of the first segment
+    # if(nrow(floSegments) == 3) {
+    #   segment2Length <- getNumValueFromSFDF(floSegments, 2, "segment_length")
+    #   distToCenter <- (segment1Length + (segment2Length/2)) #We'll say the distance to the center is the length of the first segment plus have the length of the segment inside the buffer zone. It's imperfect, but a decent approximation
+    # } else { #2 Segments, or any other weird scenarios
+    #   distToCenter <- segment1Length #if we don't have 3 segments, just default to only the length of the first segment
+    # }
+    # 
+     
+    ############################ 
+    # NEW LOGIC
+    ############################ 
+    # if the FLO has more than 1 segment, check if segment 1 is entirely inside buffer
+    if(nrow(floSegments) > 1) {
+
+      segment1_within_buffer <- st_within(floSegments[1, ], coordBufferZone)
+      
+      # st_within returns a matrix and must be converted to logical vector
+      if (lengths(segment1_within_buffer) > 0){
+        # if segment 1 is inside buffer, set distance to 0
+        distToCenter <- 0
+        segmentOneInsideBuffer <- segmentOneInsideBuffer+1
+      } else {
+        # otherwise, set distance to length of segment 1
+        segment1Length <- getNumValueFromSFDF(floSegments, 1, "segment_length")
+        distToCenter <- segment1Length
+        segmentOneOutsideBuffer <- segmentOneOutsideBuffer+1
+      }
+    } else {
+      # if the FLO only has 1 segment, it should be entirely within the buffer due to logic in getFLOsInBufferZone
+      # even if that logic fails, if there's only 1 segment, it's either entirely inside or entirely outisde the buffer
+      distToCenter <- 0
+      onlyOneSegment <- onlyOneSegment+1
     }
+    
     
     totalFLOTime <- getNumValueFromSFDF(floSegments, 1, "time") #the time and total length columns are the same for all, so just pull from row 1
     totalFLOLength <- getNumValueFromSFDF(floSegments, 1, "total_length")
-
+    
     timeToCenter <- (totalFLOTime * (distToCenter / totalFLOLength))
+    
+    # Print statments for validating results
+    print(paste("Values for floIndex ",  floIndex))
+    print(paste("totalFLOTime: ", totalFLOTime))
+    print(paste("totalFLOLength: ", totalFLOLength))
+    print(paste("timeToCenter: ", timeToCenter))
     
     floTimes[floIndex,"time_to_center"] <- timeToCenter 
   }
   
+  print("Total floset rows")
+  print(floRowCount)
+  
+  # Print statments for validating results
+  print("Segment 1 inside buffer")
+  print(segmentOneInsideBuffer)
+  print("Segment 1 outside buffer")
+  print(segmentOneOutsideBuffer)
+  print("Only 1 segment")
+  print(onlyOneSegment)
+  
   floSet <- cbind(floSet, floTimes)
+
   return(floSet)
 }
 
@@ -412,17 +462,21 @@ getEstimatedNitrateLevelsCropScape <- function(landCoverMix) {
 #' @param floTimes a data frame of flow times
 #' @returns a histogram
 createFlowTimeHistogram <- function(floTimes) {
+  print("HISTOGRAM DATA")
+  print("Original flow times")
+  print(floTimes, n = Inf)
   #Prepare our data
   floTimes <- floTimes %>%
     mutate(time_in_years = (time_to_center / 365.24))
-  
+  print("Mutated flow times")
+  print(floTimes, n = Inf)
   #Create our histogram
   flowTimeHistogram <- floTimes %>%
     ggplot(aes(x = time_in_years)) +
     geom_histogram(fill = "blue", color = "black") +
     labs(title = "Transit Times from Contributing Zones",
-         x = "Ground Water Transit Times (years)",
-         y = "Count of Pathlines") +
+         x = "Groundwater Transit Times (years)",
+         y = "Number of Flow Paths") +
     theme(title = element_text(size = 19),
           axis.title = element_text(size = 18),
           axis.text.x = element_text(size = 16),
@@ -496,7 +550,7 @@ createLandCoverPlotWiscLand <- function(landCover) {
   stackedBarPlot <- landCover %>%
     ggplot(aes(x = cls_desc_1, y = LAND_COVER_COUNT, fill = cls_desc_3)) + #the bars will be Level 1, the sub-bars will be level 3
     geom_bar(stat = "identity") +
-    labs(x = "Land Cover Category", y = "Count", title = stackedPlotTitle, fill = "Land Cover") +
+    labs(x = "Land Cover Category", y = "Number of Flow Paths", title = stackedPlotTitle, fill = "Land Cover") +
     theme(title = element_text(size = 19),
           axis.title = element_text(size = 18),
           axis.text.y = element_text(size = 16),
@@ -575,4 +629,5 @@ mainNitrateEstimator <- function() {
   print(nitrateEstimatorReturnList$flowTimeHistogram)
   print(nitrateEstimatorReturnList$no3Prediction)
 }
+
 

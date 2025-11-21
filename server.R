@@ -2,12 +2,67 @@
 
 #Function for shiny server code
 function(input, output, session) {
+  
+  # Set the correct password
+  correct_password <- "wgnhs"
+  
+  # Show password prompt when page loads
+  showModal(modalDialog(
+    title = "Enter password to access",
+    "A password is needed to access this application. To obtain a password, please contact David Hart at the Wisconsin Geological and Natural History Survey (djhart@wisc.edu) or Jennifer McNelly, Wood County Extension (jennifer.mcnelly@wisc.edu)",
+    easyClose = FALSE,
+    footer = div( style = "text-align: left;",
+          passwordInput("password_entry", "Password", width = "100%"),
+          actionButton("password_submit", "Log in")
+        )
+  ))
+  
+  # Handle the password logic after the user submits it
+  observeEvent(input$password_submit, {
+    print("observe")
+    removeModal()
+    # Check if the user clicked login without entering any password
+    if (is.null(input$password_entry)) {
+      return()
+    }
+    # Check if the entered password is correct
+    if (input$password_entry == correct_password) {
+      # debug
+      print("success")
+      # If correct, show success message
+      showModal(modalDialog(
+        title = "Success!",
+        "You are now logged in.",
+        easyClose = TRUE,
+        footer = modalButton("OK")
+      ))
+    } else {
+      # debug
+      print("error")
+      # If correct, show success error message
+      showModal(modalDialog(
+        title = "Error",
+        "The password you entered was not correct.",
+        easyClose = FALSE,
+        footer = actionButton("return_login", "Return to login")
+      ))# Hide the secured content
+    }
+  })
+  
+  # Reload function for return to login button on password error screen
+  observeEvent(input$return_login, {
+    # debug
+    print("reload")
+    # Reload page
+    session$reload()
+  })
+
   #Initial call to create map-----
   output$map <- renderLeaflet({
     leaflet() %>%
       setView(lng = defaultLng, lat = defaultLat, zoom = 8) %>%
       addProviderTiles("Esri.WorldImagery", group = "Aerial") %>% #Aerial Photo Base Layer
-      addProviderTiles("Stadia.StamenTerrain", group = "Terrain") %>%
+      addProviderTiles("OpenTopoMap", group = "Terrain") %>%
       addProviderTiles("OpenStreetMap.Mapnik", group = "Default") %>% #Default Base Layer
       addCircleMarkers(data = pumpingWells,
                   group = "Pumping Wells",
@@ -16,13 +71,13 @@ function(input, output, session) {
                   fillColor = "green",
                   fillOpacity = 0.7) %>% ##Add pumping wells
       addArrowhead(data = floDisplaySet,
-                  group = "Flow Lines",
+                  group = "Flow Paths",
                   color = "blue",
                   weight = 2,
-                  opacity = 0.5) %>% #Add all flow lines
-      hideGroup(c("Pumping Wells", "Flow Lines")) %>% #hide these groups by default
+                  opacity = 0.5) %>% #Add all flow paths
+      hideGroup(c("Pumping Wells", "Flow Paths")) %>% #hide these groups by default
       addLayersControl(baseGroups = c("Default", "Aerial", "Terrain"),
-                       overlayGroups = c("Pumping Wells", "Flow Lines"),
+                       overlayGroups = c("Pumping Wells", "Flow Paths"),
                        options = layersControlOptions(collapsed = TRUE)) %>% #Add toggle-able base layers
       addPolygons(data = pathLineBoundary,
                   group = "static",
@@ -206,11 +261,13 @@ function(input, output, session) {
     displayLat <- format(round(current_marker$lat, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
     displayLng <- format(round(current_marker$lng, digits = 7), nsmall = 7) #round to 7 decimal points, and format to display trailing 0s
     paste0(h2("Map Explanation"),
-           "Click or drag the marker within the bounded region to get estimated land use from groundwater contributing zones.", "<br>",
-           "The orange dots represent simulated groundwater entry points.", "<br>",
-           "The blue lines represent the modeled groundwater flow.", "<br>",
-           "Current marker latitude: ", displayLat, "<br>",
-           "Current marker longitude: ", displayLng, "<br>")
+           "Click or drag the marker within the gray outline of the Central Sands.", "<br>",
+           "The orange dots represent simulated groundwater entry points. This is the point associated with the contributing zone land cover.", "<br>",
+           "The blue lines represent the modeled groundwater flow paths. The land cover above the blue line is not included in the land cover chart.", "<br>",
+           "The Pumping Wells option in the legend displays high capacity wells.", "<br>",
+           "The Flow Paths option in the legend displays general groundwater flow direction.", "<br>",
+           "Current marker latitude (degrees N): ", displayLat, "<br>",
+           "Current marker longitude (degrees E): ", displayLng, "<br>")
   })
   output$landCoverExplainer <- renderText({
     no3fit <- format(round(nO3Prediction()$fit, digits = 1), nsmall = 1) #intentionally not using the point estimate prediction, as it projects too much certainty
@@ -218,8 +275,7 @@ function(input, output, session) {
     no3upr <- format(round(nO3Prediction()$upr, digits = 1), nsmall = 1)
     no3Units <- "mg/L"
     paste0(h2("Chart Explanation"),
-           "This bar chart shows the break down of land cover for the groundwater entry points", "<br>",
-           "Based on a correlation with land cover, the the nitrate level for the region you selected is likely between ", no3lwr, " ", no3Units, " and ", no3upr, " ", no3Units)
+           "This bar chart shows the land cover at the groundwater entry points.", "<br>")
   })
   
   output$transitTimeExplainer <- renderText({
@@ -227,52 +283,49 @@ function(input, output, session) {
            "This chart shows the distribution of transit times for the modeled flow paths.")
   })
   output$externalLinks <- renderText({
-    paste0(h2("Additional Info"),
+    paste0(h2("Additional Resources"),
            tags$ul(
-             tags$li(a(href ="https://www.epa.gov/mn/what-nitrate", "Learn about Nitrate from the Environmental Protection Agency", target = "_blank")),
-             tags$li(a(href = "https://www3.uwsp.edu/cnr-ap/watershed/Pages/default.aspx", "See more maps at the UW-Stevens Point Center for Watershed Science and Education", target = "_blank")),
-             tags$li("Learn about the modeling software used: "),
+           tags$li("Learn about groundwater in the Central Sands"),
+             tags$ul(
+               tags$li(a(href ="https://dnr.wisconsin.gov/topic/Wells/HighCap/CSLStudy.html", "Learn about the aquifers and ground water system from the WDNR's Central Sands Lake Study", target = "_blank")),
+               tags$li(a(href = "https://www3.uwsp.edu/cnr-ap/watershed/Pages/default.aspx", "See more maps and groundwater information at the UW–Stevens Point Center for Watershed Science and Education", target = "_blank")),
+               tags$li(a(href = "https://wgnhs.wisc.edu/catalog/publication/000960/resource/wofr201804", "An overview of available research related to the Central Sands Lakes Study.", target = "_blank"))),             
+
+               tags$li("Learn about the software and land cover data used by the model: "),
              tags$ul(
                tags$li(a(href = "https://www.usgs.gov/mission-areas/water-resources/science/modflow-and-related-programs", "MODFLOW", target = "_blank")),
-               tags$li(a(href = "https://www.usgs.gov/software/modpath-particle-tracking-model-modflow", "MODPATH", target = "_blank"))
-               )
-             )
-           )
+               tags$li(a(href = "https://www.usgs.gov/software/modpath-particle-tracking-model-modflow", "MODPATH", target = "_blank")),
+               tags$li(a(href = "https://dnr.wisconsin.gov/maps/WISCLAND", "Wiscland 2.0 Land Cover Data", target = "_blank"))),
+    
+           tags$li("The app results are based on these two peer reviewed papers:"),
+             tags$ul(
+               tags$li("Baker, E.A., Juckem, P., Feinstein, D., and Hart, D., 2025, A regional model comparison between MODPATH and MT3D of groundwater travel time distributions: Groundwater, ", a(href = "https://ngwa.onlinelibrary.wiley.com/doi/10.1111/gwat.70024", "https://doi.org/10.1111/gwat.70024.", target = "_blank")),
+               tags$li("Fienen, M.N., Haserodt, M.J., Leaf, A.T., and Westenbroek, S.M., 2022, Simulation of regional groundwater flow and groundwater/lake interactions in the Central Sands, Wisconsin: U.S. Geological Survey Scientific Investigations Report 2022–5046, 111 p., ", a(href = "https://doi.org/10.3133/sir20225046", "https://doi.org/10.3133/sir20225046.", target = "_blank")))
+           ))
   })
-  output$takeAction <- renderText({
-    paste0(h2("Action"),
-           "If your well has a high percentage of agricultural contributing zones, we recommend you test your well.",
-           "You can ",
-           tags$a(href = "https://cnroutreached.asapconnected.com/#ProductCategory=WEAL", "order a test here.", target = "_blank"), "<br>",
-           "To learn more about well water quality, you can visit ",
-           tags$a(href = "https://dnr.wisconsin.gov/topic/Wells", "the Wisconsin Department of Natural Resource's website.")
-           )
-  })
-  
+
   output$modelAssumptions <- renderText({
     paste0(h2("Model Assumptions"),
-           "There are many assumptions that go into the Nitrate estimates from this model. This model makes the following assumptions and simplifications:",
-           tags$li("It assumes uniform nitrate application in an area."),
-           tags$li("It assumes land cover is an exact proxy for nitrate application."),
-           tags$li("It assumes land cover has remained constant over time."),
-           tags$li("It does not account  for the time or distance of the groundwater flow."),
-           tags$li("It does not account for groundwater depth."),
-           tags$li("It assumes CropScape is accurate."),
-           tags$li("It only uses groundwater as a predictor, and does not account for the effects of precipitation or runoff."),
-           tags$li("It assumes a constant soil porosity and does not account for different soil types."),
-           tags$li("It assumes steady-state nitrate application and groundwater flow."),
-           tags$li("Only the land cover of the contributing points is considered; land cover in between the contributing zones and selected regions is not accounted for."),
-           tags$li("The selected region is buffered to a circle with a 100 meter radius.")
-           )
+           "There are many assumptions that go into the estimated groundwater flow paths from this model. This model makes the following assumptions and simplifications:",
+           tags$ul(
+             tags$li("It assumes steady-state groundwater flow."),           
+             tags$li("It assumes a constant aquifer porosity and does not account for different soil types."),           
+             tags$li("It does not account for groundwater depth."),
+             tags$li("It assumes Wiscland land cover data are representative of current and past landuse."),           
+             tags$li("Only the land cover at the contributing points is considered; land cover in between the contributing points and selected point is not included."),
+             tags$li("The selected location (marker) is buffered to a circle with a 1/4 mile (402 meter) diameter.")
+           ))
   })
-  
+
+
   output$groundWaterImage  <- renderImage({
     list(src = file.path("www/groundWaterDiagram.png"),
          contentType = "image/png",
          style = "max-width: 100%; max-height: 100%")
     }, deleteFile = FALSE)
   
-  output$flowlines3D <- renderUI({
+
+    output$flowlines3D <- renderUI({
     tags$iframe(src = "test3Dflowlines.html", width = "100%", height = "600px")
   })
 }
