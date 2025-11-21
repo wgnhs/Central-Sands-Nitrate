@@ -22,7 +22,7 @@ dashboardPage(
         title = "Purpose and Disclaimer",
         fluidRow(
           box(width = 8, h2("Purpose"), 
-          p("The", tags$b("Central Sands Groundwater Tracker")," is a web application (app) designed by the Wisconsin Geologic 
+          p("The", tags$b("Central Sands Groundwater Tracker")," is a web application (app) designed by the Wisconsin Geological 
             and Natural History Survey (WGNHS) to visualize the flow direction, contributing zones, and transit times of 
             groundwater in Wisconsin’s Central Sands."),
           p("The app was created as an educational tool and can be used to: (1) identify contributing areas for groundwater in a 
@@ -95,7 +95,7 @@ dashboardPage(
               take less time to reach their discharge points and so that groundwater is generally younger."),
           ),
         fluidRow(
-          column(width = 6, imageOutput("groundWaterImage"),"Figure courtesy of the U.S. Geologic Survey. 
+          column(width = 6, imageOutput("groundWaterImage"),"Figure courtesy of the U.S. Geological Survey. 
                  Source: https://doi.org/10.3133/fs06301.")
         )
         ),
